@@ -1,0 +1,18 @@
+﻿<Page
+    x:Class="Sound_Controller.PlaybackDevicesPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Sound_Controller"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" Background="Transparent" Loaded="Page_Loaded">
+
+    <ScrollViewer Margin="0,45,0,0">
+        <StackPanel HorizontalAlignment="Stretch">
+            <StackPanel Orientation="Vertical" Margin="10,0" HorizontalAlignment="Stretch">
+                <TextBlock x:Name="PageHeader" FontSize="24" Margin="10,0,14,10" FontWeight="Bold"/>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

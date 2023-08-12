@@ -1,0 +1,42 @@
+﻿<Page
+    x:Class="Sound_Controller.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Sound_Controller"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" Background="Transparent">
+
+    <ScrollViewer Margin="0,45,0,0">
+        <StackPanel HorizontalAlignment="Stretch">
+            <StackPanel Orientation="Vertical" Margin="10,0" HorizontalAlignment="Stretch">
+                <TextBlock Text="Settings" FontSize="24" Margin="10,0,14,10" FontWeight="Bold"/>
+                <muxc:Expander Margin="10,10,10,5" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                    <muxc:Expander.Header>
+                        <Grid Height="55" HorizontalAlignment="Stretch">
+                            <FontIcon Glyph="&#xE946;"
+                                      HorizontalAlignment="Left"/>
+                            <TextBlock Text="About Sound Controller"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Left"
+                                       Margin="30,0,0,0"/>
+                        </Grid>
+                    </muxc:Expander.Header>
+                    <muxc:Expander.Content>
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
+                            <TextBlock Text="UI Version:"
+                                       Margin="30,0,0,0"/>
+                            <TextBlock Text="Audio Driver Version:"
+                                       Margin="30,10,0,0"/>
+                            <TextBlock Text="Windows Version:"
+                                       Margin="30,10,0,0"/>
+                            <TextBlock Text="Copyright © 2023 Terence Carrera"
+                                       Margin="30,10,0,0"/>
+                        </StackPanel>
+                    </muxc:Expander.Content>
+                </muxc:Expander>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</Page>
