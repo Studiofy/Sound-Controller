@@ -6,7 +6,7 @@
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d" Background="Transparent" Loaded="Page_Loaded">
+    mc:Ignorable="d" Background="Transparent" Loaded="Page_Loaded" SizeChanged="Page_SizeChanged">
 
     <ScrollViewer Margin="0,45,0,0">
         <StackPanel HorizontalAlignment="Stretch">
@@ -19,15 +19,11 @@
             <StackPanel Orientation="Vertical" Margin="10,0,10,10" HorizontalAlignment="Stretch">
                 <TextBlock Text="Spatial Sound Effect" FontSize="24" Margin="10,0,14,10" FontWeight="Bold"/>
                 <StackPanel Orientation="Vertical" Background="{ThemeResource ButtonBackgroundThemeBrush}" Margin="10,0">
-                    <muxc:RadioButtons Margin="0,-5">
-                        <RadioButton Content="Off"/>
-                        <RadioButton Content="Windows® Sonic for Headphones"/>
-                        <RadioButton Content="Dolby® Atmos"/>
-                    </muxc:RadioButtons>
+                    <muxc:RadioButtons x:Name="SoundEffectsChoices" Margin="0,-5"/>
                 </StackPanel>
             </StackPanel>
             <StackPanel Orientation="Vertical" Margin="10,0,10,10" HorizontalAlignment="Stretch">
-                <TextBlock Text="" FontSize="24" Margin="10" FontWeight="Bold"/>
+                <TextBlock FontSize="24" Margin="10" FontWeight="Bold"/>
                 <StackPanel x:Name="ItemList" Orientation="Vertical" Margin="10,0">
                 
                 </StackPanel>

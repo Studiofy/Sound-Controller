@@ -32,9 +32,8 @@
         <muxc:NavigationView x:Name="MainNavigation" 
                              Grid.Row="0" Grid.RowSpan="2" 
                              Grid.Column="0" Grid.ColumnSpan="2"
-                             IsBackButtonVisible="Collapsed" 
-                             IsPaneOpen="False" 
-                             PaneDisplayMode="Left"
+                             IsBackButtonVisible="Collapsed"
+                             PaneDisplayMode="Auto"
                              OpenPaneLength="325"
                              Margin="0,-1,0,0"
                              SelectionChanged="MainNavigation_SelectionChanged">

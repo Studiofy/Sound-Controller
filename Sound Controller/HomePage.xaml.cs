@@ -13,6 +13,7 @@ using Windows.Foundation.Collections;
 using Windows.Media.Audio;
 using Windows.Media.Devices;
 using Windows.Media.Render;
+using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -33,10 +34,6 @@ namespace Sound_Controller
         public HomePage()
         {
             this.InitializeComponent();
-        }
-
-        private void VolumeSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
-        {
         }
 
         static async Task<string> GetDefaultPlaybackDeviceIdAsync()
@@ -69,6 +66,12 @@ namespace Sound_Controller
             return Volume;
         }
 
+        private async void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            await GetPlayBackDevicesAsync();
+            await GetRecordingDevicesAsync();
+        }
+
         private async Task GetPlayBackDevicesAsync()
         {
             DeviceInformationCollection Devices = await DeviceInformation.FindAllAsync(MediaDevice.GetAudioRenderSelector());
@@ -80,6 +83,12 @@ namespace Sound_Controller
             {
                 foreach (var Device in Devices)
                 {
+                    string DeviceName = Device.Name;
+
+                    int ParenthesisIndex = DeviceName.IndexOf('(');
+
+                    string CleanDeviceName = DeviceName.Substring(0, ParenthesisIndex).Trim() ?? null;
+
                     Expander PlaybackDeviceExpander = new Expander()
                     {
                         Margin = new Thickness(0, 5, 0, 5),
@@ -101,45 +110,35 @@ namespace Sound_Controller
 
                     TextBlock HeaderText = new TextBlock()
                     {
-                        Text = Device.Name,
+                        Text = CleanDeviceName,
                         Margin = new Thickness(30, 0, 0, 0),
-                        VerticalAlignment = VerticalAlignment.Center
+                        VerticalAlignment = VerticalAlignment.Center,
+                        HorizontalAlignment = HorizontalAlignment.Left,
+                        MinWidth = 100,
+                        TextTrimming = TextTrimming.CharacterEllipsis
                     };
 
                     Slider VolumeSlider = new Slider()
                     {
-                        Margin = new Thickness(0, 0, 35, 0),
                         HorizontalAlignment = HorizontalAlignment.Right,
                         VerticalAlignment = VerticalAlignment.Center,
                         Width = 200
                     };
+
                     VolumeSlider.ValueChanged += VolumeSlider_ValueChanged;
 
                     TextBlock SliderValue = new TextBlock()
                     {
-                        Margin = new Thickness(0, 0, 245, 0),
+                        Margin = new Thickness(0, 0, 210, 0),
                         HorizontalAlignment = HorizontalAlignment.Right,
                         VerticalAlignment = VerticalAlignment.Center,
-                        Text = _volume.ToString() + "%"
-                    };
-
-                    ToggleButton ToggleMuteButton = new ToggleButton()
-                    {
-                        Content = new SymbolIcon()
-                        {
-                            Symbol = Symbol.Mute
-                        },
-                        HorizontalAlignment = HorizontalAlignment.Right,
-                        VerticalAlignment = VerticalAlignment.Center,
-                        Width = 45,
-                        Margin = new Thickness(0, 0, -15, 0)
+                        Text = "Volume: " + _volume.ToString() + "%"
                     };
 
                     ExpanderHeaderGrid.Children.Add(VolumeIcon);
                     ExpanderHeaderGrid.Children.Add(HeaderText);
                     ExpanderHeaderGrid.Children.Add(SliderValue);
                     ExpanderHeaderGrid.Children.Add(VolumeSlider);
-                    ExpanderHeaderGrid.Children.Add(ToggleMuteButton);
 
                     PlaybackDeviceExpander.Header = ExpanderHeaderGrid;
 
@@ -177,15 +176,10 @@ namespace Sound_Controller
 
                 PlaybackDeviceOption.Header = PlaybackDeviceOptionHeader;
 
-                Grid PlaybackDeviceOptionContent = new Grid()
+                StackPanel PlaybackDeviceOptionContent = new StackPanel()
                 {
-                    HorizontalAlignment = HorizontalAlignment.Stretch
-                };
-
-                StackPanel OptionItemList = new StackPanel()
-                {
-                    Orientation = Orientation.Horizontal,
-                    HorizontalAlignment = HorizontalAlignment.Stretch
+                    HorizontalAlignment = HorizontalAlignment.Stretch,
+                    VerticalAlignment = VerticalAlignment.Center
                 };
 
                 TextBlock OptionItemText = new TextBlock()
@@ -193,21 +187,21 @@ namespace Sound_Controller
                     Text = "To Add Devices, Go To Windows Settings",
                     VerticalAlignment = VerticalAlignment.Center,
                     HorizontalAlignment = HorizontalAlignment.Left,
-                    Margin = new Thickness(30, 0, 0, 0),
+                    Margin = new Thickness(30, 10, 0, 0)
                 };
 
                 Button OptionItemButton = new Button()
                 {
                     Content = "Open Windows Settings",
                     HorizontalAlignment = HorizontalAlignment.Right,
-                    VerticalAlignment = VerticalAlignment.Center
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Margin = new Thickness(0, -25, 45, 0)
                 };
 
-                OptionItemList.Children.Add(OptionItemText);
-                OptionItemList.Children.Add(new TextBlock() { Width = 1 });
-                OptionItemList.Children.Add(OptionItemButton);
+                OptionItemButton.Click += OptionItemButton_Click;
 
-                PlaybackDeviceOptionContent.Children.Add(OptionItemList);
+                PlaybackDeviceOptionContent.Children.Add(OptionItemText);
+                PlaybackDeviceOptionContent.Children.Add(OptionItemButton);
 
                 PlaybackDeviceOption.Content = PlaybackDeviceOptionContent;
 
@@ -223,12 +217,6 @@ namespace Sound_Controller
             }
         }
 
-        private async void Page_Loaded(object sender, RoutedEventArgs e)
-        {
-            await GetPlayBackDevicesAsync();
-            await GetRecordingDevicesAsync();
-        }
-
         private async Task GetRecordingDevicesAsync()
         {
             DeviceInformationCollection Devices = await DeviceInformation.FindAllAsync(MediaDevice.GetAudioCaptureSelector());
@@ -237,6 +225,12 @@ namespace Sound_Controller
             {
                 foreach (var Device in Devices)
                 {
+                    string DeviceName = Device.Name;
+
+                    int ParenthesisIndex = DeviceName.IndexOf('(');
+
+                    string CleanDeviceName = DeviceName.Substring(0, ParenthesisIndex).Trim() ?? null;
+
                     Expander RecordingDeviceExpander = new Expander()
                     {
                         Margin = new Thickness(0, 5, 0, 5),
@@ -258,45 +252,33 @@ namespace Sound_Controller
 
                     TextBlock HeaderText = new TextBlock()
                     {
-                        Text = Device.Name,
+                        Text = CleanDeviceName,
                         Margin = new Thickness(30, 0, 0, 0),
                         VerticalAlignment = VerticalAlignment.Center
                     };
 
                     Slider VolumeSlider = new Slider()
                     {
-                        Margin = new Thickness(0, 0, 35, 0),
+                        Margin = new Thickness(0, 0, 0, 0),
                         HorizontalAlignment = HorizontalAlignment.Right,
                         VerticalAlignment = VerticalAlignment.Center,
                         Width = 200
                     };
+
                     VolumeSlider.ValueChanged += VolumeSlider_ValueChanged;
 
                     TextBlock SliderValue = new TextBlock()
                     {
-                        Margin = new Thickness(0, 0, 245, 0),
+                        Margin = new Thickness(0, 0, 210, 0),
                         HorizontalAlignment = HorizontalAlignment.Right,
                         VerticalAlignment = VerticalAlignment.Center,
-                        Text = VolumeSlider.Value.ToString() + "%"
-                    };
-
-                    ToggleButton ToggleMuteButton = new ToggleButton()
-                    {
-                        Content = new SymbolIcon()
-                        {
-                            Symbol = Symbol.Mute
-                        },
-                        HorizontalAlignment = HorizontalAlignment.Right,
-                        VerticalAlignment = VerticalAlignment.Center,
-                        Width = 45,
-                        Margin = new Thickness(0, 0, -15, 0)
+                        Text = "Volume: " + GetVolumeValue().ToString() + "%"
                     };
 
                     ExpanderHeaderGrid.Children.Add(MicrophoneIcon);
                     ExpanderHeaderGrid.Children.Add(HeaderText);
                     ExpanderHeaderGrid.Children.Add(SliderValue);
                     ExpanderHeaderGrid.Children.Add(VolumeSlider);
-                    ExpanderHeaderGrid.Children.Add(ToggleMuteButton);
 
                     RecordingDeviceExpander.Header = ExpanderHeaderGrid;
 
@@ -336,13 +318,8 @@ namespace Sound_Controller
 
                 Grid RecordingDeviceOptionContent = new Grid()
                 {
-                    HorizontalAlignment = HorizontalAlignment.Stretch
-                };
-
-                StackPanel OptionItemList = new StackPanel()
-                {
-                    Orientation = Orientation.Horizontal,
-                    HorizontalAlignment = HorizontalAlignment.Stretch
+                    HorizontalAlignment = HorizontalAlignment.Stretch,
+                    VerticalAlignment = VerticalAlignment.Center
                 };
 
                 TextBlock OptionItemText = new TextBlock()
@@ -350,21 +327,21 @@ namespace Sound_Controller
                     Text = "To Add Devices, Go To Windows Settings",
                     VerticalAlignment = VerticalAlignment.Center,
                     HorizontalAlignment = HorizontalAlignment.Left,
-                    Margin = new Thickness(30, 0, 0, 0),
+                    Margin = new Thickness(30, 0, 0, 0)
                 };
 
                 Button OptionItemButton = new Button()
                 {
                     Content = "Open Windows Settings",
                     HorizontalAlignment = HorizontalAlignment.Right,
-                    VerticalAlignment = VerticalAlignment.Center
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Margin = new Thickness(0, 0, 45, 0)
                 };
 
-                OptionItemList.Children.Add(OptionItemText);
-                OptionItemList.Children.Add(new TextBlock() { Width = 1 });
-                OptionItemList.Children.Add(OptionItemButton);
+                OptionItemButton.Click += OptionItemButton_Click;
 
-                RecordingDeviceOptionContent.Children.Add(OptionItemList);
+                RecordingDeviceOptionContent.Children.Add(OptionItemText);
+                RecordingDeviceOptionContent.Children.Add(OptionItemButton);
 
                 RecordingDeviceOption.Content = RecordingDeviceOptionContent;
 
@@ -378,6 +355,64 @@ namespace Sound_Controller
                     Margin = new Thickness(10)
                 });
             }
+        }
+
+        private async void OptionItemButton_Click(object sender, RoutedEventArgs e)
+        {
+            ContentDialog OpenSettingsPrompt = new ContentDialog()
+            {
+                Title = "Sound Controller Wants To Open Settings",
+                Content = "Do you want to open Windows Settings?",
+                PrimaryButtonText = "Yes",
+                CloseButtonText = "No",
+                DefaultButton = ContentDialogButton.Close
+            };
+
+            OpenSettingsPrompt.PrimaryButtonClick += OpenSettingsPrompt_PrimaryButtonClick;
+
+            await OpenSettingsPrompt.ShowAsync();
+        }
+
+        private async void OpenSettingsPrompt_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            Uri SoundSettingsUri = new Uri("ms-settings:sound");
+            bool Success = await Launcher.LaunchUriAsync(SoundSettingsUri);
+
+            if (!Success)
+            {
+                ContentDialog ErrorDialog = new ContentDialog()
+                {
+                    Title = "Error Opening Sound Settings",
+                    Content = "Please Restart the App and Try Again or Open Windows Settings Directly using Your PC."
+                };
+
+                await ErrorDialog.ShowAsync();
+            }
+        }
+
+        private double Volume;
+
+        private double GetVolumeValue()
+        {
+            return Volume;
+        }
+
+        private void SetVolumeValue(double value)
+        {
+            Volume = value;
+        }
+
+        private void VolumeSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            if (e.OldValue != e.NewValue)
+            {
+                SetVolumeValue(e.NewValue);
+            }
+        }
+
+        private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            
         }
     }
 }
